@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        margin-top: 20px;
+    }
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+    td {
+        padding: 10px;
+        text-align: center;
+        font-size: 15px;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+</style>
+</head>
+<body>
+<table id="dataTable">
+    <tr></tr>
+</table>
+<script>
+function fetchData() {
+    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS8BfCfrGbinjLxakksJGCoLOuqn6RXzrdFgRybFkmsJu34zK1wUHSpiLGKXgiimp59s0Z1j9u9x1AU/pub?gid=199252455&single=true&output=tsv';
+    fetch(url)
+    .then(response => response.text())
+    .then(data => displayData(data))
+    .catch(error => console.error('Fetch error:', error));
+}
+
+function displayData(data) {
+    const tableRow = document.getElementById('dataTable').querySelector('tr');
+    tableRow.innerHTML = ''; 
+    const lines = data.trim().split('\n');
+    
+    for (let i = 1; i < lines.length; i++) {
+        const cells = lines[i].split('\t');
+        if (cells.length > 1) {
+            const td = document.createElement('td');
+            td.textContent = `${cells[0]} = ${cells[cells.length - 1]}`;
+            tableRow.appendChild(td);
+        }
+    }
+}
+
+fetchData();
+setInterval(fetchData, 60000);
+</script>
+</body>
+</html>
