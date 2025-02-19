@@ -122,7 +122,7 @@
 <body>
 <div class="container">
 
-<form method="post" action="https://script.google.com/macros/s/AKfycbwIBxeOLPAUSHwhG3uMTSYiDDnIVk2ISiFVGBMVA2Fv4WLou6869bjOzXmBRKj9AJsr/exec" id="currencyForm">
+<form method="post" action="https://script.google.com/macros/s/AKfycbxhflPzQ81q8tEVJrmbcZz7KH_8vd2K75Kk38a5UXwA3s4VG0RoO19rN6C7tYOTD7Pf/exec" id="currencyForm">
   <table>
     <tr> 
       <td class="label">Transaction type</td>
@@ -302,22 +302,6 @@ function resetForm() {
     document.getElementById("grandTotalInWords").innerText = "Zero";
 }
 </script>
-<script>
-  function submitForm(event) {
-    event.preventDefault();
-    
-    var formData = new FormData(document.getElementById("myForm"));
-    
-    fetch("YOUR_WEB_APP_URL", {
-      method: "POST",
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      alert(data.message);  // Show a popup message
-    })
-    .catch(error => console.error("Error:", error));
-  }
-</script>
+
 </body>
 </html>
