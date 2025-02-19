@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Report</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        line-height: 1.5;
+    }
+     .button-container {
+        text-align: center;
+        margin-top: 20px; /* Adjust as needed */
+    }
+
+    button {
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    th {
+        padding: 2px;
+        border: 1px solid #dddddd;
+        text-align: center;
+        word-wrap: break-word;
+    }
+    
+    td {
+        padding: 2px;
+        border: 1px solid #dddddd;
+        text-align: right;
+        word-wrap: break-word;
+        white-space: nowrap; /* Display all data in a single line */
+    }
+    
+    /* Center align the first column */
+    td:nth-child(1) {
+        text-align: center;
+    }
+    
+    /* Left align the second & third column */
+    td:nth-child(2) {
+        text-align: left;
+    }
+    
+    td:nth-child(3) {
+        text-align: left;
+    }
+    
+    th {
+        background-color: #f2f2f2;
+        font-weight: bold;
+    }
+    
+        /* Responsive design */
+    @media only screen and (max-width: 600px) {
+        table {
+            font-size: 12px; /* Decrease font size for smaller screens */
+        }
+    }
+</style>
+</head>
+<body>
+
+<table id="dataTable">
+    <thead>
+        <tr>
+            <!-- Headers will be populated dynamically -->
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Data will be displayed here -->
+    </tbody>
+</table>
+<br>
+<div class="button-container">
+    <button class="redirect-button" onclick="window.location.href='https://docs.google.com/spreadsheets/d/e/2PACX-1vS8BfCfrGbinjLxakksJGCoLOuqn6RXzrdFgRybFkmsJu34zK1wUHSpiLGKXgiimp59s0Z1j9u9x1AU/pubhtml?gid=1076265349&single=true'">Bank Deno</button>
+</div>
+
+<script>
+window.onload = function() {
+    fetchData();
+};
+
+function fetchData() {
+    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS8BfCfrGbinjLxakksJGCoLOuqn6RXzrdFgRybFkmsJu34zK1wUHSpiLGKXgiimp59s0Z1j9u9x1AU/pub?gid=599185833&single=true&output=tsv';
+
+    fetch(url)
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.text(); // Get the text content
+    })
+    .then(data => {
+        // Parse TSV data and display it
+        displayData(data);
+    })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+    });
+}
+
+function displayData(data) {
+    const table = document.getElementById('dataTable');
+    const lines = data.split('\n');
+
+    // Headers
+    const headers = lines[0].split('\t');
+    const headerRow = table.querySelector('thead tr');
+    // Exclude the last header
+    for (let i = 0; i < headers.length - 1; i++) {
+        const th = document.createElement('th');
+        th.textContent = headers[i];
+        headerRow.appendChild(th);
+    }
+
+    // Data rows
+    const tbody = table.querySelector('tbody');
+    for (let i = 1; i < lines.length; i++) {
+        // Skip the second and third rows
+        if (i === 1 || i === 2) continue;
+        const cells = lines[i].split('\t');
+        if (cells.length === headers.length) {
+            const row = document.createElement('tr');
+            for (let j = 0; j < cells.length - 1; j++) {
+                const td = document.createElement('td');
+                if (j === 0) {
+                    // Split date and time
+                    const dateTime = cells[j].split(' ');
+                    // Display only the date
+                    td.textContent = dateTime[0];
+                } else {
+                    td.textContent = cells[j];
+                }
+                row.appendChild(td);
+            }
+            tbody.appendChild(row);
+        }
+    }
+}
+
+</script>
+
+</body>
+</html>
