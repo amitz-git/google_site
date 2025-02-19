@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: white;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        max-width: 95%;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 4px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+        text-align: center;
+        color: #333;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+    }
+
+    th {
+        border: 2px solid #ddd;
+        padding: 7px;
+        text-align: center;
+        background-color: #f2f2f2;
+    }
+
+    td {
+        border: 2px solid #ddd;
+        padding: 7px;
+        text-align: right;
+        background-color: #f2f2f2;
+    }
+
+    td.label {
+        text-align: left;
+    }
+
+    td.dd {
+        text-align: left;
+    }
+
+    input[type="text"] {
+        width: 99%;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    input[type="number"] {
+        width: 99%;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: right;
+        box-sizing: border-box;
+    }
+
+    input[type="tel"] {
+        width: 99%;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    select {
+        width: 99%;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: left;
+        box-sizing: border-box;
+    }
+
+    button {
+        display: block;
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background-color: #45a049;
+    }
+
+    #grandTotal {
+        font-weight: bold;
+    }
+
+    .error-message {
+        color: red;
+        text-align: right;
+    }
+    
+    /* Responsive design */
+    @media only screen and (max-width: 600px) {
+        table {
+            font-size: 12px; /* Decrease font size for smaller screens */
+        }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+
+<form method="post" action="https://script.google.com/macros/s/AKfycbxDYWwZv03V6q7-vAET0yG3CWTxUaoAfGdvYYZl9VIAhQ51BwL5Uz69MM0s-OsWTkAm/exec" id="currencyForm">
+  <table>
+    <tr> 
+      <td class="label">Transaction type</td>
+      <td>
+        <select class="dd" name="transactionType">
+          <option value="IIFL">Deposit</option>
+          <option value="Asirvad">Withdrawal</option>
+        </select>
+      </td>
+    </tr>
+  </table>
+  <table border="1">
+    <tr>
+      <th class="label">Currency</th><th>Count</th><th>Amount</th>
+    </tr>
+    <tr>
+      <td>500 x</td>
+      <td><input type="number" id="input500" name="input500" min="0" oninput="calculateTotals()"></td>
+      <td id="total500">0</td>
+    </tr>
+    <tr>
+      <td>200 x</td>
+      <td><input type="number" id="input200" name="input200" min="0" oninput="calculateTotals()"></td>
+      <td id="total200">0</td>
+    </tr>
+    <tr>
+      <td>100 x</td>
+      <td><input type="number" id="input100" name="input100" min="0" oninput="calculateTotals()"></td>
+      <td id="total100">0</td>
+    </tr>
+    <tr>
+      <td>50 x</td>
+      <td><input type="number" id="input50" name="input50" min="0" oninput="calculateTotals()"></td>
+      <td id="total50">0</td>
+    </tr>
+    <tr>
+      <td>20 x</td>
+      <td><input type="number" id="input20" name="input20" min="0" oninput="calculateTotals()"></td>
+      <td id="total20">0</td>
+    </tr>
+    <tr>
+      <td>10 x</td>
+      <td><input type="number" id="input10" name="input10" min="0" oninput="calculateTotals()"></td>
+      <td id="total10">0</td>
+    </tr>
+    <tr>
+      <td>5 x</td>
+      <td><input type="number" id="input5" name="input5" min="0" oninput="calculateTotals()"></td>
+      <td id="total5">0</td>
+    </tr>
+    <tr>
+      <td>2 x</td>
+      <td><input type="number" id="input2" name="input2" min="0" oninput="calculateTotals()"></td>
+      <td id="total2">0</td>
+    </tr>
+    <tr>
+      <td>1 x</td>
+      <td><input type="number" id="input1" name="input1" min="0" oninput="calculateTotals()"></td>
+      <td id="total1">0</td>
+    </tr>
+    <tr>
+      <td colspan="2"><strong>Total</strong></td>
+      <td id="grandTotal"><strong>0</strong></td>
+    </tr>
+    <tr> 
+      <td colspan="3" style="text-align: right;" id="grandTotalInWords"> In Words </td> 
+    </tr>
+  </table>
+<button type="submit" id="submitBtn" >SUBMIT</button><br>
+<button type="button" id="resetBtn" onclick="resetForm()">RESET</button>
+</form>
+
+
+</div>
+
+<script>
+function calculateTotals() {
+    var input500 = parseInt(document.getElementById("input500").value) || 0;
+    var input200 = parseInt(document.getElementById("input200").value) || 0;
+    var input100 = parseInt(document.getElementById("input100").value) || 0;
+    var input50 = parseInt(document.getElementById("input50").value) || 0;
+    var input20 = parseInt(document.getElementById("input20").value) || 0;
+    var input10 = parseInt(document.getElementById("input10").value) || 0;
+    var input5 = parseInt(document.getElementById("input5").value) || 0;
+    var input2 = parseInt(document.getElementById("input2").value) || 0;
+    var input1 = parseInt(document.getElementById("input1").value) || 0;
+    
+    var total500 = input500 * 500;
+    var total200 = input200 * 200;
+    var total100 = input100 * 100;
+    var total50 = input50 * 50;
+    var total20 = input20 * 20;
+    var total10 = input10 * 10;
+    var total5 = input5 * 5;
+    var total2 = input2 * 2;
+    var total1 = input1 * 1;
+    
+    document.getElementById("total500").innerText = total500.toFixed(2);
+    document.getElementById("total200").innerText = total200.toFixed(2);
+    document.getElementById("total100").innerText = total100.toFixed(2);
+    document.getElementById("total50").innerText = total50.toFixed(2);
+    document.getElementById("total20").innerText = total20.toFixed(2);
+    document.getElementById("total10").innerText = total10.toFixed(2);
+    document.getElementById("total5").innerText = total5.toFixed(2);
+    document.getElementById("total2").innerText = total2.toFixed(2);
+    document.getElementById("total1").innerText = total1.toFixed(2);
+    
+    var grandTotal = total500 + total200 + total100 + total50 + total20 + total10 + total5 + total2 + total1;
+    
+    document.getElementById("grandTotal").innerText = grandTotal.toFixed(2);
+    
+    // Convert grand total to words
+    var grandTotalInWords = numberToWords(grandTotal);
+    document.getElementById("grandTotalInWords").innerText = grandTotalInWords;
+}
+
+// Convert number to words function
+function numberToWords(number) {
+    var words = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten",
+                 "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
+    var tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
+
+    function convertLessThanOneThousand(n) {
+        var result = "";
+        if (n >= 100) {
+            result += words[Math.floor(n / 100)] + " Hundred";
+            n %= 100;
+            if (n > 0) {
+                result += " and ";
+            }
+        }
+        if (n >= 20) {
+            result += tens[Math.floor(n / 10)];
+            n %= 10;
+            if (n > 0) {
+                result += " " + words[n];
+            }
+        } else if (n > 0) {
+            result += words[n];
+        }
+        return result;
+    }
+
+    if (number == 0) {
+        return "Zero";
+    }
+
+    var result = "";
+    if (number >= 10000000) {
+        result += convertLessThanOneThousand(Math.floor(number / 10000000)) + " Crore ";
+        number %= 10000000;
+    }
+    if (number >= 100000) {
+        result += convertLessThanOneThousand(Math.floor(number / 100000)) + " Lakh ";
+        number %= 100000;
+    }
+    if (number >= 1000) {
+        result += convertLessThanOneThousand(Math.floor(number / 1000)) + " Thousand ";
+        number %= 1000;
+    }
+    if (number > 0) {
+        result += convertLessThanOneThousand(number);
+    }
+    return result.trim();
+}
+
+// Calculate totals initially
+calculateTotals();
+</script>
+<script>
+function resetForm() {
+    document.getElementById("currencyForm").reset();
+    [500, 200, 100, 50, 20, 10, 5, 2, 1].forEach(value => {
+        document.getElementById("total" + value).innerText = "0";
+    });
+    document.getElementById("grandTotal").innerText = "0";
+    document.getElementById("grandTotalInWords").innerText = "Zero";
+}
+</script>
+
+</body>
+</html>
