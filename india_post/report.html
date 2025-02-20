@@ -9,9 +9,13 @@
         font-family: Arial, sans-serif;
         line-height: 1.5;
     }
-     .button-container {
+    .button-container {
         text-align: center;
         margin-top: 20px; /* Adjust as needed */
+    }
+    .filter-container {
+        margin-bottom: 10px;
+        text-align: center;
     }
 
     button {
@@ -73,17 +77,24 @@
 </head>
 <body>
 
+<div class="filter-container">
+    <label for="filter1">Date:</label>
+    <select id="filter1" onchange="applyFilters()">
+        <option value="">All</option>
+    </select>
+    
+    <label for="filter2">Transaction type:</label>
+    <select id="filter2" onchange="applyFilters()">
+        <option value="">All</option>
+    </select>
+</div>
+
 <table id="dataTable">
     <thead>
-        <tr>
-            <!-- Headers will be populated dynamically -->
-        </tr>
+        <tr></tr>
     </thead>
-    <tbody>
-        <!-- Data will be displayed here -->
-    </tbody>
+    <tbody></tbody>
 </table>
-<br>
 
 <script>
 window.onload = function() {
@@ -92,55 +103,36 @@ window.onload = function() {
 
 function fetchData() {
     const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS8BfCfrGbinjLxakksJGCoLOuqn6RXzrdFgRybFkmsJu34zK1wUHSpiLGKXgiimp59s0Z1j9u9x1AU/pub?gid=599185833&single=true&output=tsv';
-
     fetch(url)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.text(); // Get the text content
-    })
+    .then(response => response.text())
     .then(data => {
-        // Parse TSV data and display it
         displayData(data);
+        populateFilters();
     })
-    .catch(error => {
-        console.error('There was a problem with the fetch operation:', error);
-    });
+    .catch(error => console.error('Fetch error:', error));
 }
 
 function displayData(data) {
     const table = document.getElementById('dataTable');
     const lines = data.split('\n');
-
-    // Headers
     const headers = lines[0].split('\t');
     const headerRow = table.querySelector('thead tr');
-    // Exclude the last header
+    
     for (let i = 0; i < headers.length - 1; i++) {
         const th = document.createElement('th');
         th.textContent = headers[i];
         headerRow.appendChild(th);
     }
-
-    // Data rows
+    
     const tbody = table.querySelector('tbody');
     for (let i = 1; i < lines.length; i++) {
-        // Skip the second and third rows
         if (i === 1 || i === 2) continue;
         const cells = lines[i].split('\t');
         if (cells.length === headers.length) {
             const row = document.createElement('tr');
             for (let j = 0; j < cells.length - 1; j++) {
                 const td = document.createElement('td');
-                if (j === 0) {
-                    // Split date and time
-                    const dateTime = cells[j].split(' ');
-                    // Display only the date
-                    td.textContent = dateTime[0];
-                } else {
-                    td.textContent = cells[j];
-                }
+                td.textContent = j === 0 ? cells[j].split(' ')[0] : cells[j];
                 row.appendChild(td);
             }
             tbody.appendChild(row);
@@ -148,6 +140,50 @@ function displayData(data) {
     }
 }
 
+function populateFilters() {
+    const table = document.getElementById('dataTable');
+    const rows = table.querySelectorAll('tbody tr');
+    const filter1 = document.getElementById('filter1');
+    const filter2 = document.getElementById('filter2');
+    
+    let values1 = new Set();
+    let values2 = new Set();
+    
+    rows.forEach(row => {
+        values1.add(row.cells[0].textContent);
+        values2.add(row.cells[1].textContent);
+    });
+    
+    values1.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        filter1.appendChild(option);
+    });
+    
+    values2.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        filter2.appendChild(option);
+    });
+}
+
+function applyFilters() {
+    const filter1Value = document.getElementById('filter1').value;
+    const filter2Value = document.getElementById('filter2').value;
+    const rows = document.querySelectorAll('#dataTable tbody tr');
+    
+    rows.forEach(row => {
+        const col1Text = row.cells[0].textContent;
+        const col2Text = row.cells[1].textContent;
+        
+        const matchesFilter1 = filter1Value === "" || col1Text === filter1Value;
+        const matchesFilter2 = filter2Value === "" || col2Text === filter2Value;
+        
+        row.style.display = matchesFilter1 && matchesFilter2 ? "" : "none";
+    });
+}
 </script>
 
 </body>
