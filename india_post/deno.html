@@ -50,6 +50,17 @@
     td.dd {
         text-align: left;
     }
+    
+    td {
+      text-align: center;
+      
+    }
+    
+    td input[type="radio"] {
+      margin: 0 5px;
+      vertical-align: middle;
+      
+    }
 
     input[type="text"] {
         width: 99%;
@@ -127,11 +138,13 @@
     <tr> 
       <td class="label">Transaction type</td>
       <td>
-        <select class="dd" name="transactionType">
-          <option value="Deposit">Deposit</option>
-          <option value="Withdrawal">Withdrawal</option>
-        </select>
+        <input type="radio" name="transactionType" value="Deposit" id="deposit" required>
+        <label for="deposit">Deposit</label>
+  
+        <input type="radio" name="transactionType" value="Withdrawal" id="withdrawal" required>
+        <label for="withdrawal">Withdrawal</label>
       </td>
+
     </tr>
   </table>
   <table border="1">
