@@ -17,6 +17,14 @@
         border-radius: 4px;
         box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     }
+    
+    .container-data {
+    	background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
 
     h1 {
         text-align: center;
@@ -109,6 +117,9 @@
 
 <form method="post" action="https://script.google.com/macros/s/AKfycbxhflPzQ81q8tEVJrmbcZz7KH_8vd2K75Kk38a5UXwA3s4VG0RoO19rN6C7tYOTD7Pf/exec" id="currencyForm">
   <table>
+  	<tr id="mergedHeader">
+      <th colspan="2">Loading data...</th>
+    </tr>
     <tr> 
       <td class="label">Transaction type</td>
       <td style="text-align: center;">
@@ -117,6 +128,9 @@
   
         <input type="radio" name="transactionType" value="Withdrawal" id="withdrawal" required>
         <label for="withdrawal">Withdrawal</label>
+        
+        <input type="radio" name="transactionType" value="Remitance" id="remitance" required>
+        <label for="withdrawal">Remitance</label>
       </td>
 
     </tr>
@@ -288,6 +302,22 @@ function resetForm() {
     document.getElementById("grandTotal").innerText = "0";
     document.getElementById("grandTotalInWords").innerText = "Zero";
 }
+
+async function fetchTSV() {
+    const url = "https://docs.google.com/spreadsheets/d/e/2PACX-1vS8BfCfrGbinjLxakksJGCoLOuqn6RXzrdFgRybFkmsJu34zK1wUHSpiLGKXgiimp59s0Z1j9u9x1AU/pub?gid=199252455&single=true&output=tsv";
+    try {
+          let response = await fetch(url);
+          let text = await response.text();
+          let rows = text.trim().split("\n").map(row => row.split("\t"));
+          let lastRow = rows[rows.length - 1];
+          let mergedValue = `${lastRow[0]} : ${lastRow[lastRow.length - 1]}`;
+          document.getElementById("mergedHeader").innerHTML = `<th colspan="2">${mergedValue}</th>`;
+          } catch (error) {
+          document.getElementById("mergedHeader").innerHTML = "<th colspan='2'>Error loading data.</th>";
+        }
+  }
+  fetchTSV();
+    
 </script>
 
 </body>
