@@ -112,7 +112,7 @@
         <option value="">All</option>
     </select>
     
-    <label for="filter2">Transaction type:</label>
+    <label for="filter2">Type:</label>
     <select id="filter2" onchange="applyFilters()">
         <option value="">All</option>
     </select>
@@ -298,12 +298,16 @@ async function fetchLastRow() {
             }
         }
 
-        function displayTable(header, lastRow) {
-            document.getElementById("header-row").innerHTML = header.map(cell => `<th>${cell}</th>`).join("");
-            document.getElementById("last-row").innerHTML = lastRow.map(cell => `<td>${cell}</td>`).join("");
-        }
+function displayTable(header, lastRow) {
+    document.getElementById("header-row").innerHTML = header.map(cell => `<th>${cell}</th>`).join("");
+    
+    document.getElementById("last-row").innerHTML = lastRow
+        .map((cell, index) => `<td style="text-align: ${index === 0 ? 'center' : 'right'};">${cell}</td>`)
+        .join("");
+}
 
-        fetchLastRow();
+
+fetchLastRow();
 </script>
 
 </body>
