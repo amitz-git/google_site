@@ -314,9 +314,9 @@ calculateTotals();
 function resetForm() {
     document.getElementById("currencyForm").reset();
     [500, 200, 100, 50, 20, 10, 5, 2, 1].forEach(value => {
-        document.getElementById("total" + value).innerText = "0";
+        document.getElementById("total" + value).innerText = "0.00";
     });
-    document.getElementById("grandTotal").innerText = "0";
+    document.getElementById("grandTotal").innerText = "0.00";
     document.getElementById("grandTotalInWords").innerText = "Zero";
 }
 
