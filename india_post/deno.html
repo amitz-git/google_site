@@ -137,7 +137,17 @@
     <tr> 
       <td class="label">Transaction type</td>
       <td style="text-align: center;">
-        <select class="dd" name="transactionType" id="dropdown">
+        <select class="dd" name="transactionType" required>
+          <option value="" disabled selected>Select a transaction type</option>
+          <option value="SB Deposit">SB Deposit</option>
+          <option value="SB Withdrawal">SB Withdrawal</option>
+          <option value="RD Deposit">RD Deposit</option>
+          <option value="TD Deposit">TD Deposit</option>
+          <option value="SSA Deposit">SSA Deposit</option>
+          <option value="IPPB Deposit">IPPB Deposit</option>
+          <option value="IPPB Withdrawal">IPPB Withdrawal</option>
+          <option value="Remittance">Remittance</option>
+          <option value="Article Booking">Article Booking</option>
         </select>
       </td>
 
@@ -208,35 +218,6 @@
 </div>
 
 <script>
-const tsvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS8BfCfrGbinjLxakksJGCoLOuqn6RXzrdFgRybFkmsJu34zK1wUHSpiLGKXgiimp59s0Z1j9u9x1AU/pub?gid=755112715&single=true&output=tsv';
-
-        // Fetch the TSV data
-        fetch(tsvUrl)
-            .then(response => response.text())
-            .then(tsvData => {
-                // Split the TSV data into lines
-                const lines = tsvData.trim().split('\n');
-
-                // Extract the headers (first line) and data rows
-                const headers = lines[0].split('\t');
-                const rows = lines.slice(1).map(line => line.split('\t'));
-
-                // Sort the rows based on the first column (change index if needed)
-                rows.sort((a, b) => a[0].localeCompare(b[0]));
-
-                // Get the dropdown element
-                const dropdown = document.getElementById('dropdown');
-
-                // Populate the dropdown with sorted data
-                rows.forEach(row => {
-                    const option = document.createElement('option');
-                    option.value = row[0]; // Set the value (change index if needed)
-                    option.textContent = row[0]; // Set the display text (change index if needed)
-                    dropdown.appendChild(option);
-                });
-            })
-            .catch(error => console.error('Error fetching or processing TSV data:', error));
-            
 function calculateTotals() {
     var input500 = parseInt(document.getElementById("input500").value) || 0;
     var input200 = parseInt(document.getElementById("input200").value) || 0;
