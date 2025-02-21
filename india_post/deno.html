@@ -55,6 +55,11 @@
         text-align: center;
     }
     
+    td.dd {
+        text-align: left;
+    }
+
+    
     td input[type="radio"] {
     	margin: 0 5px;
     	vertical-align: middle;
@@ -94,6 +99,15 @@
     button:hover {
         background-color: #45a049;
     }
+    
+    select {
+        width: 99%;
+        padding: 5px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        text-align: left;
+        box-sizing: border-box;
+    }
 
     #grandTotal {
         font-weight: bold;
@@ -123,14 +137,17 @@
     <tr> 
       <td class="label">Transaction type</td>
       <td style="text-align: center;">
-        <input type="radio" name="transactionType" value="Deposit" id="deposit" required>
-        <label for="deposit">Deposit</label>
-  
-        <input type="radio" name="transactionType" value="Withdrawal" id="withdrawal" required>
-        <label for="withdrawal">Withdrawal</label>
-        
-        <input type="radio" name="transactionType" value="Remitance" id="remitance" required>
-        <label for="withdrawal">Remitance</label>
+        <select class="dd" name="transactionType">
+          <option value="SBD">SB Deposit</option>
+          <option value="SBW">SB Withdrawal</option>
+          <option value="RDD">RD Deposit</option>
+          <option value="TDD">TD Deposit</option>
+          <option value="SSAD">SSA Deposit</option>
+          <option value="IPPBD">IPPB Deposit</option>
+          <option value="IPPBW">IPPB Withdrawal</option>
+          <option value="Remittance">Remittance</option>
+          <option value="ArtD">Article Amount Deposit</option>
+        </select>
       </td>
 
     </tr>
