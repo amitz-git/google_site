@@ -61,21 +61,14 @@
         border-spacing: 0;
     }
 
-    th {
-        padding: 2px;
-        border: 1px solid #dddddd;
-        text-align: center;
-        word-wrap: break-word;
-    }
-    
-    td {
+    th, td {
         padding: 2px;
         border: 1px solid #dddddd;
         text-align: right;
         word-wrap: break-word;
-        white-space: nowrap; /* Display all data in a single line */
+        white-space: nowrap;
     }
-    
+
     /* Center align the first column */
     td:nth-child(1) {
         text-align: center;
@@ -85,7 +78,7 @@
     td:nth-child(2) {
         text-align: left;
     }
-    
+
     th {
         background-color: #f2f2f2;
         font-weight: bold;
@@ -146,114 +139,26 @@ function displayData(data) {
     const lines = data.split('\n');
     const headers = lines[0].split('\t');
     const headerRow = table.querySelector('thead tr');
-    
-    for (let i = 0; i < headers.length; i++) {
+
+    headers.forEach(header => {
         const th = document.createElement('th');
-        th.textContent = headers[i];
+        th.textContent = header;
         headerRow.appendChild(th);
-    }
-    
-    const tbody = table.querySelector('tbody');
-    for (let i = 1; i < lines.length; i++) {
-        if (i === 1 ) continue;
-        const cells = lines[i].split('\t');
-        if (cells.length === headers.length) {
-            const row = document.createElement('tr');
-            for (let j = 0; j < cells.length; j++) {
-                const td = document.createElement('td');
-                td.textContent = j === 0 ? cells[j].split(' ')[0] : cells[j];
-                row.appendChild(td);
-            }
-            tbody.appendChild(row);
-        }
-    }
-}
-
-function populateFilters() {
-    const table = document.getElementById('dataTable');
-    const rows = table.querySelectorAll('tbody tr');
-    const filter1 = document.getElementById('filter1');
-    const filter2 = document.getElementById('filter2');
-    
-    let values1 = new Set();
-    let values2 = new Set();
-    
-    rows.forEach(row => {
-        values1.add(row.cells[0].textContent);
-        values2.add(row.cells[1].textContent);
     });
-    
-    values1.forEach(value => {
-        const option = document.createElement('option');
-        option.value = value;
-        option.textContent = value;
-        filter1.appendChild(option);
-    });
-    
-    values2.forEach(value => {
-        const option = document.createElement('option');
-        option.value = value;
-        option.textContent = value;
-        filter2.appendChild(option);
-    });
-}
 
-function applyFilters() {
-    const filter1Value = document.getElementById('filter1').value;
-    const filter2Value = document.getElementById('filter2').value;
-    const rows = document.querySelectorAll('#dataTable tbody tr');
-    
-    rows.forEach(row => {
-        const col1Text = row.cells[0].textContent;
-        const col2Text = row.cells[1].textContent;
-        
-        const matchesFilter1 = filter1Value === "" || col1Text === filter1Value;
-        const matchesFilter2 = filter2Value === "" || col2Text === filter2Value;
-        
-        row.style.display = matchesFilter1 && matchesFilter2 ? "" : "none";
-    });
-}
-</script>
-<script>
-window.onload = function() {
-    fetchData();
-};
-
-function fetchData() {
-    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vS8BfCfrGbinjLxakksJGCoLOuqn6RXzrdFgRybFkmsJu34zK1wUHSpiLGKXgiimp59s0Z1j9u9x1AU/pub?gid=599185833&single=true&output=tsv';
-    fetch(url)
-    .then(response => response.text())
-    .then(data => {
-        displayData(data);
-        populateFilters();
-    })
-    .catch(error => console.error('Fetch error:', error));
-}
-
-function displayData(data) {
-    const table = document.getElementById('dataTable');
-    const lines = data.split('\n');
-    const headers = lines[0].split('\t');
-    const headerRow = table.querySelector('thead tr');
-    
-    for (let i = 0; i < headers.length; i++) {
-        const th = document.createElement('th');
-        th.textContent = headers[i];
-        headerRow.appendChild(th);
-    }
-    
     const tbody = table.querySelector('tbody');
     tbody.innerHTML = '';
+
     for (let i = 1; i < lines.length; i++) {
-        if (i === 1 ) continue;
+        if (i === 1) continue;
         const cells = lines[i].split('\t');
         if (cells.length === headers.length) {
             const row = document.createElement('tr');
-            for (let j = 0; j < cells.length; j++) {
+            cells.forEach((cell, j) => {
                 const td = document.createElement('td');
-                td.textContent = j === 0 ? cells[j].split(' ')[0] : cells[j];
+                td.textContent = j === 0 ? cell.split(' ')[0] : cell;
                 row.appendChild(td);
-            }
+            });
             tbody.appendChild(row);
         }
     }
@@ -265,22 +170,22 @@ function populateFilters() {
     const rows = table.querySelectorAll('tbody tr');
     const filter1 = document.getElementById('filter1');
     const filter2 = document.getElementById('filter2');
-    
+
     let values1 = new Set();
     let values2 = new Set();
-    
+
     rows.forEach(row => {
         values1.add(row.cells[0].textContent);
         values2.add(row.cells[1].textContent);
     });
-    
+
     values1.forEach(value => {
         const option = document.createElement('option');
         option.value = value;
         option.textContent = value;
         filter1.appendChild(option);
     });
-    
+
     values2.forEach(value => {
         const option = document.createElement('option');
         option.value = value;
@@ -293,15 +198,15 @@ function applyFilters() {
     const filter1Value = document.getElementById('filter1').value;
     const filter2Value = document.getElementById('filter2').value;
     const rows = document.querySelectorAll('#dataTable tbody tr');
-    
+
     let visibleRows = [];
     rows.forEach(row => {
         const col1Text = row.cells[0].textContent;
         const col2Text = row.cells[1].textContent;
-        
+
         const matchesFilter1 = filter1Value === "" || col1Text === filter1Value;
         const matchesFilter2 = filter2Value === "" || col2Text === filter2Value;
-        
+
         if (matchesFilter1 && matchesFilter2) {
             row.style.display = "";
             visibleRows.push(row);
@@ -309,27 +214,37 @@ function applyFilters() {
             row.style.display = "none";
         }
     });
-    
+
     addTotalDisplay(visibleRows);
 }
 
 function addTotalDisplay(visibleRows = null) {
     let categoryTotals = {};
     const rows = visibleRows || document.querySelectorAll('#dataTable tbody tr');
-    
+
     rows.forEach(row => {
         if (row.style.display !== 'none') {
             const category = row.cells[1].textContent;
             const lastCell = row.cells[row.cells.length - 1];
             const value = parseFloat(lastCell.textContent.replace(/[₹,]/g, '')) || 0;
-            
+
             if (!categoryTotals[category]) {
                 categoryTotals[category] = 0;
             }
             categoryTotals[category] += value;
         }
     });
-    
+
+    function formatIndianCurrency(value) {
+        const isNegative = value < 0;
+        value = Math.abs(value);
+        let formattedValue = value.toLocaleString('en-IN', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+        });
+        return isNegative ? `₹-${formattedValue}` : `₹${formattedValue}`;
+    }
+
     let totalDisplay = document.getElementById('totalDisplay');
     if (!totalDisplay) {
         totalDisplay = document.createElement('div');
@@ -339,8 +254,10 @@ function addTotalDisplay(visibleRows = null) {
         totalDisplay.style.textAlign = 'center';
         document.querySelector('.filter-container').insertAdjacentElement('afterend', totalDisplay);
     }
-    
-    totalDisplay.innerHTML = Object.keys(categoryTotals).map(category => `${category}: ₹${categoryTotals[category].toLocaleString()}`).join(' | ');
+
+    totalDisplay.innerHTML = Object.keys(categoryTotals)
+        .map(category => `${category}: ${formatIndianCurrency(categoryTotals[category])}`)
+        .join(' | ');
 }
 </script>
 
